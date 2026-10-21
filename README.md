@@ -96,7 +96,7 @@ HTTP `400/413/415` 为输入错误，`429` 为限流，`502/504` 为上游失败
 - 背景图随仓库保存在 `assets/background.png`，构建时复制到 `dist/assets/`，页面从本站加载。原始图片地址：[原项目背景图](https://list.yppp.net/d/image/2026-04-03-c1e67c77aec9e74001a5a1ff326ace73.png)。
 - CodeMirror 仍从第三方 CDN 加载；加载失败时保留文本编辑。
 
-2026-10-21 本地验证：19 项 Node 自动测试通过；经本地 HTTP 接口调用真实 Judge0，Java 17 中文输出、Java 13、标准输入求和、编译错误、运行异常、CPU 超时均返回预期结果。Chromium 浏览器验证了桌面运行、Main.java 原文下载、刷新恢复、C/Java 存储隔离、320px/390px 手机布局、CDN 和存储不可用时的编辑降级。GitHub Actions 与 EdgeOne 线上状态以各平台实际结果为准。
+2026-10-21 本地验证：24 项 Node 自动测试通过，包括 EdgeOne 的 ArrayBuffer、DataView、字符串流、UTF-8 分块和大小限制回归测试；经本地 HTTP 接口调用真实 Judge0，Java 17 中文输出、Java 13、标准输入求和、编译错误、运行异常、CPU 超时均返回预期结果。Chromium 浏览器验证了桌面运行、Main.java 原文下载、刷新恢复、C/Java 存储隔离、320px/390px 手机布局、CDN 和存储不可用时的编辑降级。GitHub Actions 与 EdgeOne 线上状态以各平台实际结果为准。
 
 ## 开源协议与改编说明
 

@@ -123,3 +123,43 @@ test('Node adapter serves assets, hides source/config, and uses the shared API',
     const result = await fetch(base + '/api/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     assert.equal((await result.json()).stdout, '你好，Java！\n');
 });
+
+// EdgeOne documents stream chunks as string | ArrayBuffer | ArrayBufferView.
+// https://cloud.tencent.com/document/product/1552/81924
+const streamChunks = chunks => new ReadableStream({ start(controller) {
+    for (const chunk of chunks) controller.enqueue(chunk);
+    controller.close();
+} });
+for (const [name, convert] of [
+    ['ArrayBuffer', bytes => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)],
+    ['Uint8Array subview', bytes => { const padded = new Uint8Array(bytes.length + 8); padded.set(bytes, 3); return padded.subarray(3, 3 + bytes.length); }],
+    ['DataView subview', bytes => { const padded = new Uint8Array(bytes.length + 8); padded.set(bytes, 3); return new DataView(padded.buffer, 3, bytes.length); }],
+]) test(`EdgeOne ${name} chunks retain UTF-8 across chunk boundaries`, async () => {
+    const text = JSON.stringify({ source_code: '你好，Java！🙂', stdin: '中文输入' });
+    const bytes = new TextEncoder().encode(text);
+    const chunks = Array.from(bytes, byte => convert(new Uint8Array([byte])));
+    assert.equal(await readLimited(streamChunks(chunks), bytes.length), text);
+    await assert.rejects(readLimited(streamChunks(chunks), bytes.length - 1), { status: 413 });
+});
+test('EdgeOne string chunks count UTF-8 bytes rather than characters', async () => {
+    assert.equal(await readLimited(streamChunks(['你', '好']), 6), '你好');
+    await assert.rejects(readLimited(streamChunks(['你', '好']), 5), { status: 413 });
+});
+test('EdgeOne mixed chunks work throughout request and upstream response handling', async () => {
+    const source = 'public class Main { /* 你好，Java！ */ }';
+    const bytes = new TextEncoder().encode(JSON.stringify({ ...payload, source_code: source }));
+    const request = {
+        url: 'https://example.com/api', method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        signal: new AbortController().signal,
+        body: streamChunks([bytes.slice(0, 10).buffer, new DataView(bytes.slice(10).buffer)]),
+    };
+    const handle = createHandler({ fetch: async (_, options) => {
+        assert.equal(Buffer.from(JSON.parse(options.body).source_code, 'base64').toString(), source);
+        const data = new TextEncoder().encode(JSON.stringify(accepted));
+        return { ok: true, body: streamChunks(['{', data.slice(1, 30).buffer, new DataView(data.slice(30).buffer)]) };
+    } });
+    const response = await handle(request);
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).stdout, '你好，Java！\n');
+});

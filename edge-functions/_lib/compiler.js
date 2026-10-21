@@ -23,12 +23,19 @@ export async function readLimited(stream, maxBytes) {
         while (true) {
             const { value, done } = await reader.read();
             if (done) break;
-            size += value.byteLength;
+            // EdgeOne also returns ArrayBuffer/string chunks. Uint8Array.set()
+            // cannot copy raw ArrayBuffers or DataViews directly.
+            let chunk;
+            if (typeof value === 'string') chunk = encoder.encode(value);
+            else if (ArrayBuffer.isView(value)) chunk = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+            else if (value instanceof ArrayBuffer) chunk = new Uint8Array(value);
+            else throw new TypeError('Unsupported stream chunk');
+            size += chunk.byteLength;
             if (size > maxBytes) {
                 await reader.cancel();
                 throw new ApiError(413, '数据超过大小限制');
             }
-            chunks.push(value);
+            chunks.push(chunk);
         }
     } finally { reader.releaseLock(); }
     const bytes = new Uint8Array(size);
