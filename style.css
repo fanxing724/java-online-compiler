@@ -1,0 +1,346 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #6b7280;
+    --bg-color: #0f172a;
+    --surface-color: #1e293b;
+    --border-color: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --success-color: #22c55e;
+    --error-color: #ef4444;
+    --warning-color: #f59e0b;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-color);
+    background-image: url('https://list.yppp.net/d/image/2026-04-03-c1e67c77aec9e74001a5a1ff326ace73.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: rgba(15, 23, 42, 0.6);
+    border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    color: var(--text-secondary);
+}
+
+.container {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5rem;
+}
+
+.editor-section {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+}
+
+.output-section {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.stdin-section {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.editor-header,
+.output-header,
+.stdin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(51, 65, 85, 0.35);
+    border-radius: 8px 8px 0 0;
+    font-weight: 500;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-primary:disabled {
+    background-color: var(--secondary-color);
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: rgba(30, 41, 59, 0.5);
+    color: var(--text-primary);
+    border: 1px solid rgba(51, 65, 85, 0.4);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(51, 65, 85, 0.5);
+}
+
+/* CodeMirror 编辑器 */
+.CodeMirror {
+    flex: 1;
+    min-height: 500px;
+    border: 1px solid rgba(51, 65, 85, 0.35);
+    border-radius: 0 0 8px 8px;
+    font-size: 14px;
+    line-height: 1.6;
+    background: rgba(15, 23, 42, 0.65);
+}
+
+.CodeMirror:focus-within {
+    border-color: var(--primary-color);
+}
+
+/* 输出区域 */
+.output-content {
+    flex: 1;
+    min-height: 250px;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(51, 65, 85, 0.35);
+    border-radius: 0 0 8px 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.placeholder {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* 标准输入区域 */
+#stdinInput {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(51, 65, 85, 0.35);
+    border-radius: 0 0 8px 8px;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 14px;
+    resize: vertical;
+}
+
+#stdinInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* 状态徽章 */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge.hidden {
+    display: none;
+}
+
+.status-badge.success {
+    background-color: rgba(34, 197, 94, 0.3);
+    color: var(--success-color);
+}
+
+.status-badge.error {
+    background-color: rgba(239, 68, 68, 0.3);
+    color: var(--error-color);
+}
+
+.status-badge.running {
+    background-color: rgba(245, 158, 11, 0.3);
+    color: var(--warning-color);
+}
+
+/* 后端状态指示器 */
+.backend-status {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    display: inline-block;
+}
+.backend-status.healthy {
+    color: var(--success-color);
+    background: rgba(34, 197, 94, 0.15);
+}
+.backend-status.error {
+    color: var(--error-color);
+    background: rgba(239, 68, 68, 0.15);
+}
+
+
+/* 页脚 */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 1px solid rgba(51, 65, 85, 0.3);
+    background: rgba(15, 23, 42, 0.6);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.footer-highlight {
+    color: #60a5fa;
+    font-weight: bold;
+    font-size: 1rem;
+    text-shadow: 0 0 5px rgba(96, 165, 250, 0.3);
+}
+
+.mobile-hint {
+    display: none;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background: rgba(245, 158, 11, 0.16);
+    color: var(--text-primary);
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* 手机端单列布局 */
+@media (max-width: 768px) {
+    .mobile-hint {
+        display: block;
+    }
+    header h1 {
+        font-size: 1.3rem;
+    }
+    header p {
+        font-size: 0.75rem;
+    }
+    header {
+        padding: 0.5rem;
+    }
+    .container {
+        grid-template-columns: 1fr;
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+    .editor-section,
+    .output-section,
+    .stdin-section {
+        grid-column: 1;
+        grid-row: auto;
+    }
+    .CodeMirror {
+        min-height: 260px;
+        font-size: 13px;
+    }
+    .output-content {
+        min-height: 120px;
+        font-size: 12px;
+    }
+    #stdinInput {
+        min-height: 50px;
+        font-size: 12px;
+    }
+    .btn {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.75rem;
+    }
+    .editor-header,
+    .output-header,
+    .stdin-header {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    footer {
+        padding: 0.75rem;
+        font-size: 0.75rem;
+    }
+    .footer-highlight {
+        font-size: 0.85rem;
+    }
+}
+
+/* 平板横屏双列 */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+    .container {
+        grid-template-columns: 1fr 1fr;
+        padding: 1rem;
+        gap: 1rem;
+    }
+}
+
+.editor-options { display: flex; flex-wrap: wrap; gap: 1rem; padding: .75rem 1rem; background: rgba(15,23,42,.6); }
+.editor-options label { display: flex; align-items: center; gap: .5rem; font-size: .85rem; }
+select { max-width: 100%; color: var(--text-primary); background: #1e293b; border: 1px solid var(--border-color); border-radius: 5px; padding: .4rem; }
+.editor-note { padding: .5rem .75rem; font-size: .75rem; color: var(--text-secondary); line-height: 1.6; background: rgba(15,23,42,.7); }
+#codeEditor { display: block; width: 100%; min-height: 400px; resize: vertical; padding: 1rem; background: rgba(15,23,42,.85); color: var(--text-primary); font: 14px/1.6 monospace; border: 1px solid var(--border-color); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.container { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.editor-section, .output-section, .stdin-section { min-width: 0; }
+.btn:focus-visible, select:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+@media (max-width: 768px) {
+    .container { grid-template-columns: minmax(0, 1fr); }
+    .editor-header { flex-wrap: wrap; gap: .5rem; }
+    .actions { flex-wrap: wrap; }
+    .editor-options { padding: .5rem; gap: .5rem; }
+    #codeEditor { min-height: 260px; }
+}
