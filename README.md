@@ -4,6 +4,8 @@
 
 ## 功能
 
+页面顶部提供[我的 GitHub](https://github.com/fanxing724)和[项目源码](https://github.com/fanxing724/java-online-compiler)入口；与 [C 版本](https://github.com/fanxing724/c-online-compiler)同步维护。
+
 - Java 17（默认，Judge0 ID `91`）和 Java 13（ID `62`）。
 - Java 语法高亮、括号补全、行号；编辑器 CDN 不可用时回退到文本编辑。
 - Hello World / 中文输出、标准输入求和、数组排序示例。
