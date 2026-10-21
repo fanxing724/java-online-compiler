@@ -1,3 +1,16 @@
+<!-- fanxing-style:start -->
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="https://fanxing724.github.io/new-make/fanxing724/projects/java-online-compiler/cover.light.svg">
+  <img alt="番星 Java 在线编译器" src="https://fanxing724.github.io/new-make/fanxing724/projects/java-online-compiler/cover.svg" width="100%">
+</picture>
+
+**给灵光一现，留一个 main 方法的位置。**
+
+从 C 版本延伸出的 Java 练习空间，保留同样熟悉的编辑体验。代码、输入和结果放在一起，适合试一段单文件程序；编译与执行由 Judge0 服务完成。
+
+<sub>番星 / 星轨手记 · <a href="https://fanxing724.github.io/new-make/fanxing724/projects/style.html">风格样板</a> · <a href="https://fanxing724.github.io/">个人小站</a></sub>
+<!-- fanxing-style:end -->
+
 # 番星 Java 在线编译器
 
 基于 [fanxing724/c-online-compiler](https://github.com/fanxing724/c-online-compiler) 改编的独立 Java 在线编译器，保留原项目的深色编辑器布局和移动端适配。前端使用 CodeMirror，代码交给 Judge0 沙箱编译执行，本机和 EdgeOne 不执行用户提交的 Java 程序。
