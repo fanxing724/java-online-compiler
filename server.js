@@ -11,6 +11,7 @@ export function createServer(env = process.env, options = {}) {
         '/index.html': ['index.html', 'text/html; charset=utf-8'],
         '/app.js': ['app.js', 'application/javascript; charset=utf-8'],
         '/style.css': ['style.css', 'text/css; charset=utf-8'],
+        '/assets/background.png': ['assets/background.png', 'image/png'],
     };
     return http.createServer({ requestTimeout: 15000, headersTimeout: 10000, maxHeaderSize: 8192 }, async (req, res) => {
         try {
